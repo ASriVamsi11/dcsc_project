@@ -7,8 +7,14 @@ import os
 
 app = Flask(__name__)
 
+host = "localhost"  # Hostname or IP address
+port = 27017        # Port number
+username = "admin"  # Root username
+password = "secret" # Root password
+
 # MongoDB configuration
-MONGO_URI = "mongodb+srv://andavarapuvamsi3:qISi9R1HeApjKYlJ@dcscproject.puj7i.mongodb.net/"
+MONGO_URI = f"mongodb://{username}:{password}@{host}:{port}/"
+#MONGO_URI = "mongodb+srv://andavarapuvamsi3:qISi9R1HeApjKYlJ@dcscproject.puj7i.mongodb.net/"
 client = MongoClient(MONGO_URI)
 db = client.ocr_database
 results_collection = db.results
