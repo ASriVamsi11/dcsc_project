@@ -24,7 +24,7 @@ results_collection = db.results
 
 # Google Cloud Storage configuration
 #os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/home/asrivamsi11/dcsc_project/dcscproject-34b356ce3665.json"
-
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/x/Desktop/dcscproject-8d7b7c202473.json"
 GCS_BUCKET = "dcscprojectb1"
 storage_client = storage.Client()
 
@@ -61,12 +61,22 @@ def upload():
 
     return jsonify({'message': 'Task added to queue', 'task_id': task_id})
 
-@app.route('/result/<task_id>', methods=['GET'])
-def get_result(task_id):
-    result = results_collection.find_one({'task_id' : task_id}, {'_id': 0})
-    if not result:
-        return jsonify({'error': 'Result not found'}),404
-    return jsonify(result)
+@app.route('/results/<task_id>', methods=['GET'])
+def get_results(task_id):
+    try:
+        # 从 MongoDB 获取结果
+        result = results_collection.find_one({'task_id': task_id})
+        
+        if result:
+            # 转换 ObjectId 为字符串，确保可以 JSON 序列化
+            result['_id'] = str(result['_id'])
+            return jsonify(result)
+        else:
+            return jsonify({'error': 'Result not found'}), 404
+            
+    except Exception as e:
+        print(f"Error fetching results: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

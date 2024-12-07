@@ -20,6 +20,7 @@ db = client.ocr_database
 results_collection = db.results
 
 # Google Cloud Storage configuration
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/x/Desktop/dcscproject-8d7b7c202473.json"
 GCS_BUCKET = "dcscprojectb1"
 storage_client = storage.Client()
 

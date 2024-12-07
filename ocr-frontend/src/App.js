@@ -6,7 +6,7 @@ const backendUrl = 'http://127.0.0.1:5000';
 function App() {
   const [file, setFile] = useState(null);
   const [taskId, setTaskId] = useState(null);
-  const [result, setResult] = useState([]);
+  const [result, setResult] = useState(null);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
 
   const handleFileChange = (e) => setFile(e.target.files[0]);
@@ -48,9 +48,22 @@ function App() {
       return;
     }
 
+    const url = `${backendUrl}/results/${taskId}`;
+    console.log('Fetching from URL:', url);
+
     try {
-      const response = await fetch(`${backendUrl}/results/${taskId}`);
+      const response = await fetch(url);
+      console.log('Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+      
       const data = await response.json();
+      console.log('Received data:', data);
+      
       if (data.error) {
         alert(data.error);
       } else {
@@ -58,6 +71,7 @@ function App() {
       }
     } catch (error) {
       console.error("Error fetching results: ", error);
+      alert(`Failed to fetch results: ${error.message}`);
     }
   };
 
@@ -77,7 +91,6 @@ function App() {
             <option value="eng">English</option>
             <option value="chi_sim">Chinese (Simplified)</option>
             <option value="hin">Hindi</option>
-            <option value="spa">Spanish</option>
           </select>
         </div>
         <button onClick={handleUpload}>Upload</button>
