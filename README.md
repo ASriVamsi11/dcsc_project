@@ -112,27 +112,36 @@ sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
 ## 3. Build Docker Images
 
-### Frontend
+### Option 1: Using Docker Commands
+
+#### Frontend
 ```bash
 docker build -t ocr-frontend ./frontend
 ```
 
-### Backend
+#### Backend
 ```bash
 docker build -t ocr-backend ./backend
 ```
 
-### Worker
+#### Worker
 ```bash
 docker build -t ocr-worker ./worker
 ```
 
-### Push Images (if using a container registry)
+#### Push Images (if using a container registry)
 ```bash
 docker tag ocr-backend gcr.io/<project-id>/ocr-backend
 docker push gcr.io/<project-id>/ocr-backend
 ```
 
+### Option 2: Using Makefile
+
+If your project includes a Makefile, you can use the following commands to build and push the images:
+```bash
+make build
+make push
+```
 ## 4. Configure Google Cloud Storage
 
 ### Create a Service Account
